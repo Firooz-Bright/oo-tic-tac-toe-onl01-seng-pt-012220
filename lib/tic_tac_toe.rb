@@ -12,8 +12,8 @@ class TicTacToe
     [2,4,6]
   ]
   
-   def initialize(board = nil)
-    @board = board || Array.new(9, " ")
+   def initialize(board =nil )
+    @board = board || Array.new(9," ")
    end
    
   def display_board
@@ -34,7 +34,7 @@ class TicTacToe
   end 
   
   def position_taken?(index)
-   if  ((@board[index] == "X") || (@board[index] == "O"))
+   if  (@board[index]=="X")||(@board[index]=="O")
      return true 
    else
     return false 
@@ -42,7 +42,8 @@ class TicTacToe
  end 
  
   def valid_move?(index)
-  if(( index<=8 && index>=0)) && (!position_taken?(index))
+ # if(index<=8 && index>=0) && (!position_taken?(index))
+  if  index.between?(0,8) && !position_taken?(index)
       return true 
     else
      return nil
@@ -58,21 +59,19 @@ class TicTacToe
       move(index, char)
       display_board
     else
-      turn             # ask the method again 
+      turn
     end
- end
+end
 
    def turn_count
      number_of_turns = 0 
-     @board.each {|board| 
-     if board == "X" || board == "O"
-     number_of_turns += 1
-    end}
+     @board.each {|board| if (board == "X")||(board == "O")
+     number_of_turns += 1 end }
      return number_of_turns
    end 
  
  def current_player
-  if turn_count%2 == 0 
+  if turn_count % 2 == 0 
   "X"
     else
   "O"
@@ -80,46 +79,56 @@ class TicTacToe
 end
    
   def won?
-   for i in 0..WIN_COMBINATIONS.length-1 do
-   if (@board[WIN_COMBINATIONS[i][0]]) == "X" &&  (@board[WIN_COMBINATIONS[i][1]]) == "X" &&(@board[WIN_COMBINATIONS[i][2]]) == "X"
+   for i in 0..WIN_COMBINATIONS.length-1 do 
+  if (@board[WIN_COMBINATIONS[i][0]]== "X") && (@board[WIN_COMBINATIONS[i][1]] == "X") && (@board[WIN_COMBINATIONS[i][2]] == "X")
+    return @board
+   elsif (@board[WIN_COMBINATIONS[i][0]]=="O") && (@board[WIN_COMBINATIONS[i][1]] =="O") && (@board[WIN_COMBINATIONS[i][2]] =="O")
      return @board
-       
-    elsif (@board[WIN_COMBINATIONS[i][0]]) == "O" && (@board[WIN_COMBINATIONS[i][1]]) == "O" &&(@board[WIN_COMBINATIONS[i][2]]) == "O"
-      return @board
     else
     return
      false
     end 
   end 
  end 
+ 
+def won?
+  WIN_COMBINATIONS.detect do |win|
+   if (@board[win[0]]) == "X" && (@board[win[1]]) == "X" && (@board[win[2]]) == "X"
+     return win
+    elsif (@board[win[0]]) == "O" && (@board[win[1]]) == "O" && (@board[win[2]]) == "O"
+     return win
+    end
+      false
+ end
+end
+
 
   def full?
     @board.all?{|b| b!=" "}
   end
   
   def draw?
-  !(won?) && (full?)
+  !(won?)&&(full?)
   end
  
  def over?
-  won? || full? || draw?
+  (won?)||(full?)||(draw?)
  end
  
  def winner
-  for i in 0..WIN_COMBINATIONS.length-1 do
-   if (@board[WIN_COMBINATIONS[i][0]]) == "X" && (@board[WIN_COMBINATIONS[i][1]]) == "X" && (@board[WIN_COMBINATIONS[i][2]]) == "X"
-       return "X"
-    elsif (@board[WIN_COMBINATIONS[i][0]]) == "O" && (@board[WIN_COMBINATIONS[i][1]]) == "O" && (@board[WIN_COMBINATIONS[i][2]]) == "O"
-       return "O"
+  WIN_COMBINATIONS.detect do |winner|
+    if (@board[winner[0]]) == "X" && (@board[winner[1]]) == "X" && (@board[winner[2]]) == "X"
+      return "X"
+    elsif (@board[winner[0]]) == "O" && (@board[winner[1]]) == "O" && (@board[winner[2]]) == "O"
+      return "O"
     else
-    return
-     nil
-    end 
-  end 
-  end 
-  
+      nil
+    end
+  end
+end
 
-def play
+
+ def play
   while over? == false
     turn
   end
@@ -130,7 +139,5 @@ def play
     puts "Cat's Game!"
   end
 end
-
-
 
 end 
